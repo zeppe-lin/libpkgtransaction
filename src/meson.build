@@ -18,7 +18,7 @@ libpkgtransaction = library(
   dependencies: [libcrypto_dep, libpkgresolve_dep, libpkgstate_dep],
   install: true,
   version: meson.project_version(),
-  soversion: '0',
+  soversion: '1',
 )
 
 libpkgtransaction_dep = declare_dependency(
