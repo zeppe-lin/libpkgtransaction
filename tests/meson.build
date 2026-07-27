@@ -8,10 +8,19 @@ if get_option('tests').enabled()
     ['public-headers', 'public_headers.cpp'],
   ]
     executable_value = executable(
-      case[0] + '-test', case[1],
+      case[0] + '-test',
+      case[1],
       dependencies: libpkgtransaction_dep,
       install: false,
     )
     test(case[0], executable_value)
   endforeach
+  metadata = find_program('metadata_test.sh')
+  test('metadata', metadata, args: [meson.project_build_root()])
+  release_metadata = find_program('check_release_metadata.sh')
+  test('release-metadata', release_metadata,
+       args: [meson.project_source_root()])
+  authority_contract = find_program('check_authority_contract.sh')
+  test('authority-contract', authority_contract,
+       args: [meson.project_source_root()])
 endif
