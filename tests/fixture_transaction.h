@@ -7,6 +7,7 @@
 #include <libpkgtransaction/libpkgtransaction.h>
 
 namespace fixture {
+
 inline pkgresolve::resolution_request resolution_request(
     pkgcatalog::catalog_snapshot catalog,
     pkgstate::snapshot state,
@@ -23,6 +24,7 @@ inline pkgresolve::resolution_request resolution_request(
           pkgsource::architecture_reference(std::move(target))),
       std::move(goals), pkgresolve::resolution_policy(preference));
 }
+
 inline pkgresolve::resolution_result resolution(
     pkgcatalog::catalog_snapshot catalog,
     pkgstate::snapshot state,
@@ -33,4 +35,14 @@ inline pkgresolve::resolution_result resolution(
   return pkgresolve::resolve(resolution_request(
       std::move(catalog), std::move(state), std::move(goals), preference));
 }
+
+inline std::size_t count_action(
+    const pkgtransaction::transaction_program& program,
+    pkgtransaction::transaction_action_kind action)
+{
+  return static_cast<std::size_t>(std::count_if(
+      program.nodes().begin(), program.nodes().end(),
+      [action](const auto& node) { return node.action() == action; }));
+}
+
 } // namespace fixture

@@ -6,3 +6,5 @@
 #include <libpkgtransaction/identity.h>
 #include <libpkgtransaction/model.h>
 #include <libpkgtransaction/request.h>
+#include <libpkgtransaction/program.h>
+#include <libpkgtransaction/composer.h>

@@ -4,6 +4,7 @@ if get_option('tests').enabled()
   foreach case : [
     ['identity', 'identity_test.cpp'],
     ['request', 'request_test.cpp'],
+    ['composer', 'composer_test.cpp'],
     ['public-headers', 'public_headers.cpp'],
   ]
     executable_value = executable(
