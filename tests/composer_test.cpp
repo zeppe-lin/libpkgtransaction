@@ -119,18 +119,100 @@ int main()
           convergence_policy::remove_explicit(
               {pkgsource::package_reference("cleanup")})));
 
-  auto old_app = fixture::source(profiles, "app", {}, {"x86_64"}, {"x86_64"},
-                                 "0.9.0", 1);
-  const auto old_installed = fixture::installed_package(old_app, binding, 100);
+  const auto pre_install = pkgsource::requirement_scope::lifecycle(
+      pkgsource::lifecycle_action::pre_install);
+  const auto post_remove = pkgsource::requirement_scope::lifecycle(
+      pkgsource::lifecycle_action::post_remove);
+  auto upgrade_candidate = fixture::source(
+      profiles, "upgrade-app", {}, {"x86_64"}, {"x86_64"}, "1.0.0", 1,
+      {pkgsource::lifecycle_action::pre_install,
+       pkgsource::lifecycle_action::post_install});
+  auto old_upgrade_app = fixture::source(
+      profiles, "upgrade-app", {}, {"x86_64"}, {"x86_64"}, "0.9.0", 1,
+      {pkgsource::lifecycle_action::pre_remove,
+       pkgsource::lifecycle_action::post_remove});
+  const auto upgrade_catalog = fixture::catalog(
+      profiles, {upgrade_candidate});
+  const auto old_installed = fixture::installed_package(
+      old_upgrade_app, binding, 100);
   const auto upgrade_state = fixture::state({old_installed}, binding);
   const auto upgrade_result = fixture::resolution(
-      catalog, upgrade_state,
-      {fixture::package_goal(pkgsource::requirement_scope::run(), "app")},
+      upgrade_catalog, upgrade_state,
+      {
+        fixture::package_goal(pkgsource::requirement_scope::run(),
+                              "upgrade-app"),
+        fixture::package_goal(pre_remove, "upgrade-app"),
+        fixture::package_goal(post_remove, "upgrade-app"),
+        fixture::package_goal(pre_install, "upgrade-app"),
+        fixture::package_goal(post_install, "upgrade-app"),
+      },
       pkgresolve::installed_preference::prefer_catalog);
   const auto upgrade_program = compose(
       transaction_request::seal(upgrade_result));
   TEST_CHECK(fixture::count_action(upgrade_program,
       transaction_action_kind::upgrade) == 1);
+  TEST_CHECK(fixture::count_action(upgrade_program,
+      transaction_action_kind::remove) == 0);
+  TEST_CHECK(fixture::count_action(upgrade_program,
+      transaction_action_kind::lifecycle) == 4);
+
+  const transaction_node* upgrade = nullptr;
+  const transaction_node* old_pre_remove = nullptr;
+  const transaction_node* old_post_remove = nullptr;
+  const transaction_node* incoming_pre_install = nullptr;
+  const transaction_node* incoming_post_install = nullptr;
+  for (const auto& node : upgrade_program.nodes()) {
+    if (node.package().name() != "upgrade-app") continue;
+    if (node.action() == transaction_action_kind::upgrade) {
+      upgrade = &node;
+      TEST_CHECK(node.selection() && node.selection()->candidate());
+      continue;
+    }
+    if (node.action() != transaction_action_kind::lifecycle ||
+        !node.lifecycle())
+      continue;
+    switch (*node.lifecycle()) {
+    case pkgsource::lifecycle_action::pre_remove:
+      old_pre_remove = &node;
+      TEST_CHECK(node.selection() && node.selection()->installed());
+      break;
+    case pkgsource::lifecycle_action::post_remove:
+      old_post_remove = &node;
+      TEST_CHECK(node.selection() && node.selection()->installed());
+      break;
+    case pkgsource::lifecycle_action::pre_install:
+      incoming_pre_install = &node;
+      TEST_CHECK(node.selection() && node.selection()->candidate());
+      break;
+    case pkgsource::lifecycle_action::post_install:
+      incoming_post_install = &node;
+      TEST_CHECK(node.selection() && node.selection()->candidate());
+      break;
+    }
+  }
+  TEST_CHECK(upgrade && old_pre_remove && old_post_remove &&
+             incoming_pre_install && incoming_post_install);
+
+  const auto has_phase = [&](const transaction_node& before,
+                             const transaction_node& after,
+                             phase_order_kind order) {
+    return std::any_of(
+        upgrade_program.edges().begin(), upgrade_program.edges().end(),
+        [&](const auto& edge) {
+          return edge.kind() == transaction_edge_kind::phase &&
+                 edge.before() == before.identity() &&
+                 edge.after() == after.identity() &&
+                 edge.phase_order() == order;
+        });
+  };
+  TEST_CHECK(has_phase(*old_pre_remove, *upgrade,
+                       phase_order_kind::pre_lifecycle_before_action));
+  TEST_CHECK(has_phase(*incoming_pre_install, *upgrade,
+                       phase_order_kind::pre_lifecycle_before_action));
+  TEST_CHECK(has_phase(*upgrade, *old_post_remove,
+                       phase_order_kind::action_before_post_lifecycle));
+  TEST_CHECK(has_phase(*upgrade, *incoming_post_install,
+                       phase_order_kind::action_before_post_lifecycle));
 
   auto cycle_a = fixture::source(profiles, "cycle-a", {
       fixture::requirement(pkgsource::requirement_scope::run(),

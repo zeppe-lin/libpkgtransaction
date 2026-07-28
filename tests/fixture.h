@@ -84,7 +84,8 @@ inline pkgsource::source_snapshot source(
     std::vector<std::string> build_architectures = {"x86_64"},
     std::vector<std::string> target_architectures = {"x86_64"},
     std::string version = "1.0.0",
-    std::uint32_t release = 1)
+    std::uint32_t release = 1,
+    std::vector<pkgsource::lifecycle_action> lifecycle_actions = {})
 {
   std::vector<pkgsource::architecture_reference> build;
   for (auto& value : build_architectures)
@@ -94,7 +95,8 @@ inline pkgsource::source_snapshot source(
     target.emplace_back(std::move(value));
 
   std::vector<pkgsource::lifecycle_program> lifecycle_programs;
-  std::vector<pkgsource::lifecycle_action> actions;
+  std::vector<pkgsource::lifecycle_action> actions =
+      std::move(lifecycle_actions);
   for (const auto& value : requirements) {
     if (value.scope().kind() == pkgsource::requirement_scope_kind::lifecycle)
       actions.push_back(*value.scope().action());
