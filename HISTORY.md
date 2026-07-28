@@ -1,5 +1,20 @@
 # History
 
+## libpkgtransaction 1.1.0
+
+Upgrade lifecycle authority correction.
+
+- binds exact installed `pre_remove` and `post_remove` lifecycle nodes to the
+  upgrade action for the same target package;
+- keeps incoming `pre_install` and `post_install` nodes bound to that same
+  upgrade action under catalog-candidate authority;
+- retains historical installed authority for removal lifecycle material;
+- emits all four phase edges without inventing order among pre-actions or
+  among post-actions;
+- rejects a contradictory program containing both remove and upgrade actions
+  for one installed package;
+- preserves the public API, identity domains, and `libpkgtransaction.so.1`.
+
 ## libpkgtransaction 1.0.0
 
 Initial native cross-package transaction authority.
