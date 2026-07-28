@@ -49,7 +49,10 @@ Check nodes are created only for explicit check-goal members. Lifecycle nodes
 are created only for explicit lifecycle-goal members; the library does not
 invent lifecycle execution merely because a package declares a program. Every
 lifecycle node must bind to the corresponding install, upgrade, or remove node;
-orphan lifecycle work is rejected.
+orphan lifecycle work is rejected. During upgrade, incoming `pre_install` and
+`post_install` nodes retain catalog-candidate authority, while installed
+`pre_remove` and `post_remove` nodes retain the exact historical installed
+authority. All four bind to the single upgrade action for that package.
 
 ## Ordering
 
@@ -61,6 +64,11 @@ scope. Phase edges distinguish:
 - check before install or upgrade;
 - pre-action lifecycle before the package action;
 - package action before post-action lifecycle.
+
+An upgrade therefore has one action boundary: old installed `pre_remove` and
+incoming `pre_install` precede it; old installed `post_remove` and incoming
+`post_install` follow it. These edges constrain phase order without choosing an
+order between the two pre-actions or between the two post-actions.
 
 The graph is a partial order. Deterministic storage order is not execution
 precedence.

@@ -5,9 +5,10 @@
 It consumes one sealed `libpkgresolve::resolution_result` plus explicit
 convergence policy and produces an immutable package-operation program. The
 program classifies build, check, install, upgrade, retain, remove, and
-lifecycle work; retains typed ordering witnesses; represents runtime cycles as
-explicit cohorts; and seals the complete graph under a domain-separated
-identity.
+lifecycle work; binds installed removal lifecycle and incoming installation
+lifecycle around one exact upgrade action; retains typed ordering witnesses;
+represents runtime cycles as explicit cohorts; and seals the complete graph
+under a domain-separated identity.
 
 The library does not discover collections, resolve dependencies, inspect
 archives, construct `libpkgplan` requests, execute programs, mutate filesystems,

@@ -9,6 +9,8 @@ The native suite covers:
 - build/check-only goals without accidental target installation;
 - exact convergence versus preservation of unselected packages;
 - phase and requirement ordering;
+- complete upgrade ordering with installed remove and incoming install
+  lifecycle authority around one upgrade action;
 - rejection of lifecycle work without its matching package action;
 - distinction between removal roots and lifecycle dependency packages;
 - runtime-cycle cohorts without cyclic ordering edges;

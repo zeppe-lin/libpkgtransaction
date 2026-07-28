@@ -18,6 +18,13 @@ additive resolution result never implies removal.
 Requirement edges preserve typed resolver scopes. Phase edges order build,
 check, package action, and explicitly requested lifecycle nodes. A lifecycle
 node without its matching install, upgrade, or remove action is rejected.
+
+For an upgrade, installed *pre_remove* and incoming *pre_install* nodes precede
+the single upgrade action. Installed *post_remove* and incoming *post_install*
+nodes follow it. Installed removal nodes retain historical installed authority;
+incoming installation nodes retain catalog-candidate authority. No order is
+inferred within either side of the action boundary.
+
 Storage order is deterministic but is not execution precedence.
 
 # CYCLES
