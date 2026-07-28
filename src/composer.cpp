@@ -289,6 +289,43 @@ std::optional<node_id> completion_node(const graph_state& state,
   return std::nullopt;
 }
 
+std::optional<node_id> target_upgrade_node(
+    const graph_state& state,
+    const pkgsource::package_reference& package)
+{
+  std::optional<node_id> result;
+  for (const auto& node : state.nodes) {
+    if (node.environment() != pkgresolve::resolution_environment::target ||
+        node.action() != transaction_action_kind::upgrade ||
+        node.package().name() != package.name())
+      continue;
+    if (result && *result != node.identity())
+      throw error(error_code::inconsistent_authority,
+                  "multiple target upgrades for package: " + package.name());
+    result = node.identity();
+  }
+  return result;
+}
+
+std::optional<node_id> removal_lifecycle_target(
+    const graph_state& state,
+    const pkgstate::installed_package& installed)
+{
+  std::optional<node_id> remove;
+  if (const auto found = state.node_by_key.find(
+          installed_key(installed, transaction_action_kind::remove));
+      found != state.node_by_key.end())
+    remove = found->second;
+
+  const auto upgrade = target_upgrade_node(
+      state, pkgsource::package_reference(installed.release().name()));
+  if (remove && upgrade)
+    throw error(error_code::inconsistent_authority,
+                "package has both remove and upgrade actions: " +
+                installed.release().name());
+  return remove ? remove : upgrade;
+}
+
 std::vector<std::vector<std::string>> strongly_connected(
     const std::map<std::string, std::vector<std::string>>& graph)
 {
@@ -428,11 +465,9 @@ transaction_program compose(transaction_request request)
                     selection->package().name());
     } else {
       const auto* installed = selection->installed();
-      if (!installed || state.node_by_key.find(installed_key(
-              *installed, transaction_action_kind::remove)) ==
-              state.node_by_key.end())
+      if (!installed || !removal_lifecycle_target(state, *installed))
         throw error(error_code::unbound_lifecycle,
-                    "removal lifecycle has no remove action: " +
+                    "removal lifecycle has no remove or upgrade action: " +
                     selection->package().name());
     }
   }
@@ -562,18 +597,20 @@ transaction_program compose(transaction_request request)
                 phase_order_kind::action_before_post_lifecycle);
   }
   for (const auto& installed : result.request().installed().packages()) {
-    const auto remove_it = state.node_by_key.find(
-        installed_key(installed, transaction_action_kind::remove));
-    if (remove_it == state.node_by_key.end()) continue;
+    const auto target = removal_lifecycle_target(state, installed);
+    if (!target) continue;
     for (const auto& selection : result.selections()) {
-      if (selection.package().name() != installed.release().name()) continue;
+      const auto* selected_installed = selection.installed();
+      if (!selected_installed ||
+          selected_installed->identity() != installed.identity())
+        continue;
       const auto pre = lookup(state, selection.identity(),
           transaction_action_kind::lifecycle, pkgsource::lifecycle_action::pre_remove);
       const auto post = lookup(state, selection.identity(),
           transaction_action_kind::lifecycle, pkgsource::lifecycle_action::post_remove);
-      if (pre) add_phase(*pre, remove_it->second,
+      if (pre) add_phase(*pre, *target,
                          phase_order_kind::pre_lifecycle_before_action);
-      if (post) add_phase(remove_it->second, *post,
+      if (post) add_phase(*target, *post,
                           phase_order_kind::action_before_post_lifecycle);
     }
   }
