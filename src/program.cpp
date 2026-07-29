@@ -64,6 +64,19 @@ const pkgresolve::selected_package* transaction_node::selection() const noexcept
 { return std::get_if<pkgresolve::selected_package>(&authority_); }
 const pkgstate::installed_package* transaction_node::installed() const noexcept
 { return std::get_if<pkgstate::installed_package>(&authority_); }
+const pkgsource::program* transaction_node::check_program() const noexcept
+{
+  if (action_ != transaction_action_kind::check)
+    return nullptr;
+  const auto* selected = selection();
+  if (!selected)
+    return nullptr;
+  const auto* candidate = selected->candidate();
+  if (!candidate)
+    return nullptr;
+  const auto& program = candidate->source().recipe().check_program();
+  return program ? &*program : nullptr;
+}
 const pkgsource::package_reference& transaction_node::package() const noexcept
 { return package_; }
 const std::optional<pkgsource::lifecycle_action>&

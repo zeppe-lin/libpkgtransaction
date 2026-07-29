@@ -29,6 +29,7 @@ public:
   [[nodiscard]] const transaction_authority& authority() const noexcept;
   [[nodiscard]] const pkgresolve::selected_package* selection() const noexcept;
   [[nodiscard]] const pkgstate::installed_package* installed() const noexcept;
+  [[nodiscard]] const pkgsource::program* check_program() const noexcept;
   [[nodiscard]] const pkgsource::package_reference& package() const noexcept;
   [[nodiscard]] const std::optional<pkgsource::lifecycle_action>&
   lifecycle() const noexcept;

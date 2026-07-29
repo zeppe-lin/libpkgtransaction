@@ -13,6 +13,7 @@ enum class error_code {
   duplicate_removal,
   unknown_installed_package,
   selected_for_removal,
+  missing_check_program,
   unbound_lifecycle,
   inconsistent_authority,
   construction_cycle,

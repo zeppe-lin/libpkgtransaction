@@ -227,6 +227,25 @@ bool removal_only(const std::vector<pkgresolve::selection_reason>& reasons)
   });
 }
 
+void require_check_authority(const pkgresolve::selected_package& selection)
+{
+  const auto* candidate = selection.candidate();
+  if (!candidate)
+    throw error(error_code::inconsistent_authority,
+                "check goal lacks catalog-candidate authority: " +
+                selection.package().name());
+  if (candidate->package() != selection.package() ||
+      candidate->release().identity() != selection.release().identity() ||
+      candidate->source().identity() != selection.source_snapshot())
+    throw error(error_code::inconsistent_authority,
+                "check goal selection differs from catalog authority: " +
+                selection.package().name());
+  if (!candidate->source().recipe().check_program())
+    throw error(error_code::missing_check_program,
+                "check goal has no check program: " +
+                selection.package().name());
+}
+
 struct graph_state {
   transaction_request request;
   std::vector<transaction_node> nodes;
@@ -422,9 +441,11 @@ transaction_program compose(transaction_request request)
         throw error(error_code::inconsistent_authority,
                     "goal references an unknown selection");
       const auto& selection = *found->second;
-      if (goal.goal().scope().kind() == pkgsource::requirement_scope_kind::check &&
-          selection.authority_kind() == pkgresolve::selection_authority_kind::catalog_candidate)
+      if (goal.goal().scope().kind() ==
+          pkgsource::requirement_scope_kind::check) {
+        require_check_authority(selection);
         add_selected_node(state, selection, transaction_action_kind::check);
+      }
       if (goal.goal().scope().kind() == pkgsource::requirement_scope_kind::lifecycle)
         add_selected_node(state, selection, transaction_action_kind::lifecycle,
                           goal.goal().scope().action());

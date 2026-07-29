@@ -24,6 +24,19 @@ if (library_kind == 'static') != want_static
 endif
 
 libcrypto_dep = dependency('libcrypto', required: true, static: want_static)
+libpkgsource_dep = dependency(
+  'libpkgsource',
+  version: '>=2.0.0',
+  required: true,
+  static: want_static,
+  fallback: ['libpkgsource', 'libpkgsource_dep'],
+  default_options: [
+    'default_library=' + library_kind,
+    'link_mode=' + get_option('link_mode'),
+    'planner_adapter=disabled',
+    'yaml_adapter=disabled',
+  ],
+)
 libpkgstate_dep = dependency(
   'libpkgstate',
   version: '>=2.1.0',

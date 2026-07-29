@@ -15,7 +15,12 @@ libpkgtransaction = library(
     'composer.cpp',
   ],
   include_directories: [public_inc, private_inc],
-  dependencies: [libcrypto_dep, libpkgresolve_dep, libpkgstate_dep],
+  dependencies: [
+    libcrypto_dep,
+    libpkgsource_dep,
+    libpkgresolve_dep,
+    libpkgstate_dep,
+  ],
   install: true,
   version: meson.project_version(),
   soversion: '1',
@@ -24,7 +29,12 @@ libpkgtransaction = library(
 libpkgtransaction_dep = declare_dependency(
   link_with: libpkgtransaction,
   include_directories: public_inc,
-  dependencies: [libcrypto_dep, libpkgresolve_dep, libpkgstate_dep],
+  dependencies: [
+    libcrypto_dep,
+    libpkgsource_dep,
+    libpkgresolve_dep,
+    libpkgstate_dep,
+  ],
 )
 meson.override_dependency('libpkgtransaction', libpkgtransaction_dep)
 
@@ -46,6 +56,7 @@ pkgconf.generate(
   description: 'Native deterministic package-transaction authority',
   subdirs: '.',
   requires: [
+    'libpkgsource >= 2.0.0',
     'libpkgresolve >= 1.0.0',
     'libpkgstate >= 2.1.0',
   ],
