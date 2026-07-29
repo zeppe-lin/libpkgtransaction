@@ -85,7 +85,8 @@ inline pkgsource::source_snapshot source(
     std::vector<std::string> target_architectures = {"x86_64"},
     std::string version = "1.0.0",
     std::uint32_t release = 1,
-    std::vector<pkgsource::lifecycle_action> lifecycle_actions = {})
+    std::vector<pkgsource::lifecycle_action> lifecycle_actions = {},
+    std::optional<std::string> check_program = std::nullopt)
 {
   std::vector<pkgsource::architecture_reference> build;
   for (auto& value : build_architectures)
@@ -109,6 +110,11 @@ inline pkgsource::source_snapshot source(
         pkgsource::program(pkgsource::program_language::posix_shell,
                            "true\n"));
 
+  std::optional<pkgsource::program> check;
+  if (check_program)
+    check.emplace(pkgsource::program_language::posix_shell,
+                  std::move(*check_program));
+
   pkgsource::recipe_declaration declaration(
       pkgsource::package_release(
           pkgsource::package_reference(name), std::move(version), release),
@@ -121,10 +127,11 @@ inline pkgsource::source_snapshot source(
       std::move(requirements), std::move(lifecycle_programs),
       pkgsource::architecture_requirements(
           std::move(build), std::move(target)),
-      at("recipe", 1));
+      at("recipe", 1), check);
   return pkgsource::seal_source(
       pkgsource::source_origin(name + "/recipe.yml"),
-      pkgsource::source_syntax::recipe_yaml_v1,
+      check ? pkgsource::source_syntax::recipe_yaml_v2
+            : pkgsource::source_syntax::recipe_yaml_v1,
       std::move(declaration), profile_catalog);
 }
 

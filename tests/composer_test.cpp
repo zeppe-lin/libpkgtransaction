@@ -22,7 +22,8 @@ int main()
           pkgsource::requirement_scope::lifecycle(
               pkgsource::lifecycle_action::pre_remove),
           "cleanup", "requirements.lifecycle.pre-remove[0]"),
-  });
+  }, {"x86_64"}, {"x86_64"}, "1.0.0", 1, {},
+      "printf 'checked\\n'\n");
   auto lib = fixture::source(profiles, "lib", {
       fixture::requirement(pkgsource::requirement_scope::run(),
                            "runtime", "requirements.run[0]"),
@@ -43,6 +44,8 @@ int main()
       transaction_action_kind::build) == 3);
   TEST_CHECK(fixture::count_action(run_program,
       transaction_action_kind::install) == 3);
+  TEST_CHECK(fixture::count_action(run_program,
+      transaction_action_kind::check) == 0);
   TEST_CHECK(run_program.runtime_cohorts().empty());
   TEST_CHECK(std::count_if(run_program.edges().begin(), run_program.edges().end(),
       [](const auto& edge) {
