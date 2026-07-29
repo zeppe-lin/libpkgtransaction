@@ -1,5 +1,24 @@
 # History
 
+## libpkgtransaction 2.0.0
+
+Exact check-program authority and the required ABI rebuild.
+
+- advances `libpkgtransaction` to SONAME 2 because `transaction_node` retains
+  `pkgresolve::selected_package` by value;
+- requires `libpkgsource >= 2.0.0` and `libpkgresolve >= 2.0.0`;
+- creates check nodes only for explicit check-goal members whose selected
+  catalog source snapshot carries a check program;
+- validates that the selected package, release, and source snapshot agree with
+  the retained catalog candidate before admitting check work;
+- exposes the exact non-executed source program through
+  `transaction_node::check_program()`;
+- rejects missing check programs and forged source bindings with typed errors;
+- binds changed check-program bytes transitively into request, node, and
+  program identities through source-snapshot authority;
+- preserves transaction semantics and identity domains while requiring a
+  generation-2 source/catalog/resolve binary closure.
+
 ## libpkgtransaction 1.1.0
 
 Upgrade lifecycle authority correction.

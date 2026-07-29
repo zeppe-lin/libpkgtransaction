@@ -120,3 +120,11 @@ Version 1 has no:
 - state mutation or publication;
 - transaction-wide rollback or atomicity claim;
 - historical pkgman compatibility.
+
+## Version 2 ABI boundary
+
+`transaction_node` retains `pkgresolve::selected_package` by value. Resolver
+2 embeds the catalog/source ABI transition, so transaction node layout is not
+compatible with SONAME 1 even though the check-program accessor adds no field
+of its own. Version 2 forbids a mixed source/catalog/resolve authority closure
+and preserves transaction identities and graph semantics.

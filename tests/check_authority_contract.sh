@@ -15,7 +15,7 @@ if grep -R -E 'Pkgfile|fakeroot|pkgman\.conf|/var/lib/pkg/db|build_and_run' \
   exit 1
 fi
 grep -q "'libpkgresolve'" "$root/meson.build"
-grep -q "version: '>=1.0.0'" "$root/meson.build"
+grep -q "version: '>=2.0.0'" "$root/meson.build"
 grep -q "'libpkgsource'" "$root/meson.build"
 grep -q "version: '>=2.0.0'" "$root/meson.build"
 grep -q "'libpkgstate'" "$root/meson.build"

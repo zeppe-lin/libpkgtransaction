@@ -18,11 +18,10 @@ previously attempted to compose installed `pre_remove` or `post_remove` goals
 alongside an upgrade were rejected as unbound; they are now represented around
 the exact upgrade action while retaining historical installed authority.
 
-## 1.2.0
+## 2.0.0
 
-No `libpkgtransaction` value layout or stored-format migration is required.
-The library now links directly against `libpkgsource >= 2.0.0` and rejects an
-explicit check goal unless the selected catalog source carries an exact check
-program. Consumers should rebuild against the new source-authority closure.
-Programs created for non-check transactions retain their existing model and
-identity domains.
+Install `libpkgsource.so.2`, `libpkgcatalog.so.2`, and `libpkgresolve.so.2`, then
+rebuild consumers against `libpkgtransaction.so.2`. `transaction_node` retains
+resolver selections by value, so the source/catalog/resolve ABI transition is
+part of its public layout. No transaction request or identity migration is
+required. Explicit check goals now require exact source check-program authority.

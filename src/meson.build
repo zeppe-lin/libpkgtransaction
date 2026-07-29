@@ -23,7 +23,7 @@ libpkgtransaction = library(
   ],
   install: true,
   version: meson.project_version(),
-  soversion: '1',
+  soversion: '2',
 )
 
 libpkgtransaction_dep = declare_dependency(
@@ -57,7 +57,7 @@ pkgconf.generate(
   subdirs: '.',
   requires: [
     'libpkgsource >= 2.0.0',
-    'libpkgresolve >= 1.0.0',
+    'libpkgresolve >= 2.0.0',
     'libpkgstate >= 2.1.0',
   ],
   requires_private: ['libcrypto'],
