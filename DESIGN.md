@@ -45,14 +45,22 @@ Installed build-environment selections become retain actions. Installed target
 selections become retain actions when they satisfy run or lifecycle work.
 Removal-only lifecycle roots do not become retain actions.
 
-Check nodes are created only for explicit check-goal members. Lifecycle nodes
-are created only for explicit lifecycle-goal members; the library does not
-invent lifecycle execution merely because a package declares a program. Every
-lifecycle node must bind to the corresponding install, upgrade, or remove node;
-orphan lifecycle work is rejected. During upgrade, incoming `pre_install` and
-`post_install` nodes retain catalog-candidate authority, while installed
-`pre_remove` and `post_remove` nodes retain the exact historical installed
-authority. All four bind to the single upgrade action for that package.
+Check nodes are created only for explicit check-goal members. The selected
+catalog candidate must agree exactly with the resolver selection's package,
+release, and source-snapshot identity, and that exact source snapshot must
+carry a check program. A check goal without a program is rejected rather than
+silently omitted or represented as executable work. `transaction_node::
+check_program()` exposes the retained non-executed program only for check
+nodes.
+
+Lifecycle nodes are created only for explicit lifecycle-goal members; the
+library does not invent lifecycle execution merely because a package declares
+a program. Every lifecycle node must bind to the corresponding install,
+upgrade, or remove node; orphan lifecycle work is rejected. During upgrade,
+incoming `pre_install` and `post_install` nodes retain catalog-candidate
+authority, while installed `pre_remove` and `post_remove` nodes retain the
+exact historical installed authority. All four bind to the single upgrade
+action for that package.
 
 ## Ordering
 
@@ -94,7 +102,9 @@ Version 1 defines separate SHA-256 domains for:
 - complete transaction programs.
 
 Program identity binds the exact request and normalized node, edge, and cohort
-identities.
+identities. Check-program bytes are bound transitively through the selected
+source-snapshot identity; they are not copied into a second transaction-owned
+program representation.
 
 ## Deliberate omissions
 
@@ -106,6 +116,7 @@ Version 1 has no:
 - artifact acquisition, cache lookup, or image inspection;
 - package-local filesystem planning;
 - build, lifecycle, or application execution;
+- check environment construction or check-result evidence;
 - state mutation or publication;
 - transaction-wide rollback or atomicity claim;
 - historical pkgman compatibility.

@@ -10,6 +10,11 @@ Build- and check-only goals do not imply target installation. Run and lifecycle
 work may require target install, upgrade, or retain actions. Exact installed
 authority is retained without reconstruction.
 
+An explicit check goal requires catalog-candidate authority whose exact source
+snapshot contains a check program. Missing programs and selection-to-candidate
+source mismatches are composition errors. Declared check requirements alone do
+not constitute executable check authority.
+
 Removal is controlled only by explicit convergence policy. Absence from an
 additive resolution result never implies removal.
 
@@ -36,7 +41,9 @@ construction authorities and lifecycle-requirement cycles are refused.
 
 The program is an immutable cross-package operation graph. It is not a
 filesystem plan, execution log, rollback receipt, or installed-state update.
+It does not define a check environment or claim that any check was executed.
 
 # SEE ALSO
 
-*libpkgtransaction*(3), *libpkgresolve*(3), *libpkgplan*(3), *libpkgapply*(3)
+*libpkgtransaction*(3), *libpkgsource*(3), *libpkgresolve*(3),
+*libpkgplan*(3), *libpkgapply*(3)

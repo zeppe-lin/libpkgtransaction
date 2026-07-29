@@ -14,6 +14,12 @@ lifecycle actions. Requirement edges retain resolver witnesses. Phase edges
 retain package-local phase relationships, including installed removal and
 incoming installation lifecycle around one upgrade action.
 
+A check node retains catalog-candidate authority whose package, release, and
+source snapshot agree with the resolver selection. *check_program()* returns
+the exact non-executed source program for that node and null for every other
+node kind. A valid transaction program never contains a check node without a
+program.
+
 A runtime cohort retains a strongly connected runtime group and its internal
 requirement witnesses without claiming an order among its members.
 

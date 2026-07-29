@@ -7,6 +7,11 @@ The native suite covers:
 - explicit-removal admission and selected/removal conflicts;
 - build, check, install, upgrade, retain, remove, and lifecycle classification;
 - build/check-only goals without accidental target installation;
+- exact source-program retention on explicit check nodes;
+- refusal of check goals without a source check program;
+- refusal of forged check selections whose source identity differs from their
+  retained catalog candidate;
+- check-program identity propagation into request, node, and program identity;
 - exact convergence versus preservation of unselected packages;
 - phase and requirement ordering;
 - complete upgrade ordering with installed remove and incoming install

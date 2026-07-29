@@ -14,6 +14,10 @@ libpkgtransaction - native cross-package transaction authority
 convergence policy. It returns an immutable program of package-level actions,
 typed ordering edges, runtime cohorts, and a complete program identity.
 
+Explicit check work is admitted only when the exact selected catalog source
+snapshot carries a check program. The program bytes remain source authority;
+the transaction graph binds them through the resolver selection.
+
 # BOUNDARY
 
 The library does not resolve dependencies, inspect artifacts, construct
@@ -28,4 +32,5 @@ Contract and composition failures throw *pkgtransaction::error*. Branch on
 # SEE ALSO
 
 *pkgtransaction_request*(3), *pkgtransaction_program*(3),
-*pkgtransaction_semantics*(7), *libpkgresolve*(3), *libpkgplan*(3)
+*pkgtransaction_semantics*(7), *libpkgsource*(3), *libpkgresolve*(3),
+*libpkgplan*(3)

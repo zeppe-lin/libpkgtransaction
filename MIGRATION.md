@@ -17,3 +17,12 @@ the new release to obtain complete upgrade lifecycle phase edges. Programs that
 previously attempted to compose installed `pre_remove` or `post_remove` goals
 alongside an upgrade were rejected as unbound; they are now represented around
 the exact upgrade action while retaining historical installed authority.
+
+## 1.2.0
+
+No `libpkgtransaction` value layout or stored-format migration is required.
+The library now links directly against `libpkgsource >= 2.0.0` and rejects an
+explicit check goal unless the selected catalog source carries an exact check
+program. Consumers should rebuild against the new source-authority closure.
+Programs created for non-check transactions retain their existing model and
+identity domains.
