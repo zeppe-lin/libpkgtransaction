@@ -26,3 +26,11 @@ grep -q 'old_pre_remove' "$root/tests/composer_test.cpp"
 grep -q 'incoming_post_install' "$root/tests/composer_test.cpp"
 grep -q 'require_check_authority' "$root/src/composer.cpp"
 grep -q 'missing_check_program' "$root/tests/check_program_test.cpp"
+
+grep -q 'requirement_scope_kind::check' "$root/src/composer.cpp"
+grep -q 'edge.after() == checked_build.identity()' \
+  "$root/tests/check_program_test.cpp"
+grep -q 'edge.after() == check.identity()' \
+  "$root/tests/check_program_test.cpp"
+grep -q 'Build- and check-scoped package requirements both precede' \
+  "$root/DESIGN.md"
