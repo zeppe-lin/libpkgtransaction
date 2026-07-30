@@ -584,10 +584,9 @@ transaction_program compose(transaction_request request)
     }
     const auto before = completion_node(state, witness.required());
     std::optional<node_id> after;
-    if (witness.scope().kind() == pkgsource::requirement_scope_kind::build)
+    if (witness.scope().kind() == pkgsource::requirement_scope_kind::build ||
+        witness.scope().kind() == pkgsource::requirement_scope_kind::check)
       after = lookup(state, witness.issuer(), transaction_action_kind::build);
-    else if (witness.scope().kind() == pkgsource::requirement_scope_kind::check)
-      after = lookup(state, witness.issuer(), transaction_action_kind::check);
     else if (witness.scope().kind() == pkgsource::requirement_scope_kind::lifecycle)
       after = lookup(state, witness.issuer(), transaction_action_kind::lifecycle,
                      witness.scope().action());
