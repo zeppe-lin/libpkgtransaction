@@ -8,6 +8,9 @@ The native suite covers:
 - build, check, install, upgrade, retain, remove, and lifecycle classification;
 - build/check-only goals without accidental target installation;
 - exact source-program retention on explicit check nodes;
+- check-scoped dependency ordering before the build result that seals check
+  input authority;
+- absence of redundant direct check-requirement edges after construction;
 - refusal of check goals without a source check program;
 - refusal of forged check selections whose source identity differs from their
   retained catalog candidate;

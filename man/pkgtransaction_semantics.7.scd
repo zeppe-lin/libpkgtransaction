@@ -20,9 +20,15 @@ additive resolution result never implies removal.
 
 # ORDERING
 
-Requirement edges preserve typed resolver scopes. Phase edges order build,
-check, package action, and explicitly requested lifecycle nodes. A lifecycle
-node without its matching install, upgrade, or remove action is rejected.
+Requirement edges preserve typed resolver scopes. Build- and check-scoped
+package requirements both precede the issuer build node because the sealed
+build result retains both input classes. The check node inherits exact check
+inputs through the build-before-check phase edge; no redundant requirement edge
+is emitted directly to the check node.
+
+Phase edges order build, check, package action, and explicitly requested
+lifecycle nodes. A lifecycle node without its matching install, upgrade, or
+remove action is rejected.
 
 For an upgrade, installed *pre_remove* and incoming *pre_install* nodes precede
 the single upgrade action. Installed *post_remove* and incoming *post_install*

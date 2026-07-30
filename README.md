@@ -7,9 +7,10 @@ convergence policy and produces an immutable package-operation program. The
 program classifies build, check, install, upgrade, retain, remove, and
 lifecycle work; admits check work only when the exact selected source snapshot
 carries a check program; binds installed removal lifecycle and incoming
-installation lifecycle around one exact upgrade action; retains typed ordering
-witnesses; represents runtime cycles as explicit cohorts; and seals the
-complete graph under a domain-separated identity.
+installation lifecycle around one exact upgrade action; orders exact build and
+check input authority before the construction node that seals it; retains typed
+ordering witnesses; represents runtime cycles as explicit cohorts; and seals
+the complete graph under a domain-separated identity.
 
 The library does not discover collections, resolve dependencies, inspect
 archives, construct `libpkgplan` requests, execute programs, mutate filesystems,

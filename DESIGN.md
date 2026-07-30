@@ -65,7 +65,14 @@ action for that package.
 ## Ordering
 
 Requirement edges retain the exact resolver requirement-edge identity and
-scope. Phase edges distinguish:
+scope. Build- and check-scoped package requirements both precede the issuer's
+build node. This is an authority rule, not an execution convenience: the sealed
+`libpkgbuild::build_request` retains both input classes, and the later check
+request projects its exact check-input set from the successful build result. A
+check node therefore inherits those inputs through its own build-before-check
+phase edge rather than receiving a second direct requirement edge.
+
+Phase edges distinguish:
 
 - build before check;
 - build before install or upgrade;

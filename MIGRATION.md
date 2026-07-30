@@ -25,3 +25,11 @@ rebuild consumers against `libpkgtransaction.so.2`. `transaction_node` retains
 resolver selections by value, so the source/catalog/resolve ABI transition is
 part of its public layout. No transaction request or identity migration is
 required. Explicit check goals now require exact source check-program authority.
+
+## 2.1.0
+
+No API or ABI migration is required. Rebuild transaction consumers and do not
+reuse persisted transaction-program identities for check goals: check-scoped
+requirements now precede the issuer build node, so affected edge and program
+identities change. This closes the ordering required by the existing build and
+check authority contracts; it does not add check execution.

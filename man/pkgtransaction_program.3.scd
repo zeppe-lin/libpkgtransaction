@@ -6,6 +6,10 @@ pkgtransaction_program - immutable package-operation graph
 
 # DESCRIPTION
 
+Requirement edges for build- and check-scoped package inputs precede the
+issuer build node. The successful build result seals both classes of input
+authority; the package check node then follows through a distinct phase edge.
+
 *transaction_program* retains normalized operation nodes, ordering edges,
 runtime cohorts, the exact request, and a domain-separated identity.
 

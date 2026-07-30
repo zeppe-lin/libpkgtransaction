@@ -1,5 +1,18 @@
 # History
 
+## libpkgtransaction 2.1.0
+
+Check-input construction ordering correction.
+
+- orders both build- and check-scoped package requirements before the issuer's
+  build node because the sealed build request retains both input classes;
+- keeps the package's own build-before-check phase edge as the check node's
+  direct predecessor;
+- prevents orchestration from reserving construction before exact check-input
+  build authority exists;
+- preserves the public API, SONAME 2, and all value layouts while changing
+  affected transaction-program identities to reflect the corrected graph.
+
 ## libpkgtransaction 2.0.0
 
 Exact check-program authority and the required ABI rebuild.
