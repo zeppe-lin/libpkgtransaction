@@ -5,10 +5,25 @@
 
 #include <algorithm>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
 namespace {
+
+const pkgtransaction::transaction_node& build_node(
+    const pkgtransaction::transaction_program& program,
+    std::string_view package)
+{
+  const auto found = std::find_if(
+      program.nodes().begin(), program.nodes().end(), [&](const auto& node) {
+        return node.action() ==
+                   pkgtransaction::transaction_action_kind::build &&
+               node.package().name() == package;
+      });
+  TEST_CHECK(found != program.nodes().end());
+  return *found;
+}
 
 const pkgtransaction::transaction_node& check_node(
     const pkgtransaction::transaction_program& program)
@@ -69,7 +84,17 @@ int main()
                edge.phase_order() == phase_order_kind::build_before_check;
       });
   TEST_CHECK(build_before_check);
+  const auto& checked_build = build_node(program, "checked");
+  const auto& tester_build = build_node(program, "tester");
   TEST_CHECK(std::any_of(
+      program.edges().begin(), program.edges().end(), [&](const auto& edge) {
+        return edge.kind() == transaction_edge_kind::requirement &&
+               edge.before() == tester_build.identity() &&
+               edge.after() == checked_build.identity() && edge.scope() &&
+               edge.scope()->kind() ==
+                   pkgsource::requirement_scope_kind::check;
+      }));
+  TEST_CHECK(std::none_of(
       program.edges().begin(), program.edges().end(), [&](const auto& edge) {
         return edge.kind() == transaction_edge_kind::requirement &&
                edge.after() == check.identity() && edge.scope() &&
