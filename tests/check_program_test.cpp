@@ -102,10 +102,7 @@ int main()
                    pkgsource::requirement_scope_kind::check;
       }));
 
-  auto unchecked = fixture::source(
-      profiles, "unchecked", {fixture::requirement(
-          pkgsource::requirement_scope::check(), "tester",
-          "requirements.check[0]")});
+  auto unchecked = fixture::source(profiles, "unchecked");
   auto unchecked_catalog = fixture::catalog(profiles, {unchecked, tester});
   const auto unchecked_result = fixture::resolution(
       unchecked_catalog, fixture::empty_state(),
