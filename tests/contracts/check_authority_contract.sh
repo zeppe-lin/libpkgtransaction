@@ -14,23 +14,23 @@ if grep -R -E 'Pkgfile|fakeroot|pkgman\.conf|/var/lib/pkg/db|build_and_run' \
   echo 'authority-contract: historical compatibility entered native code' >&2
   exit 1
 fi
+
 grep -q "'libpkgresolve'" "$root/meson.build"
 grep -q "version: '>=2.0.0'" "$root/meson.build"
 grep -q "'libpkgsource'" "$root/meson.build"
 grep -q "version: '>=2.0.0'" "$root/meson.build"
 grep -q "'libpkgstate'" "$root/meson.build"
 grep -q "version: '>=2.1.0'" "$root/meson.build"
+
 grep -q 'target_upgrade_node' "$root/src/composer.cpp"
 grep -q 'remove or upgrade action' "$root/src/composer.cpp"
-grep -q 'old_pre_remove' "$root/tests/composer_test.cpp"
-grep -q 'incoming_post_install' "$root/tests/composer_test.cpp"
 grep -q 'require_check_authority' "$root/src/composer.cpp"
-grep -q 'missing_check_program' "$root/tests/check_program_test.cpp"
-
 grep -q 'requirement_scope_kind::check' "$root/src/composer.cpp"
-grep -q 'edge.after() == checked_build.identity()' \
-  "$root/tests/check_program_test.cpp"
-grep -q 'edge.after() == check.identity()' \
-  "$root/tests/check_program_test.cpp"
+
+grep -q 'old_pre' "$root/tests/integration/lifecycle_test.cpp"
+grep -q 'new_post' "$root/tests/integration/lifecycle_test.cpp"
+grep -q 'missing_check_program' "$root/tests/integration/check_authority_test.cpp"
+grep -q 'edge.after() == app_check->identity()' \
+  "$root/tests/integration/ordering_test.cpp"
 grep -q 'Build- and check-scoped package requirements both precede' \
   "$root/DESIGN.md"

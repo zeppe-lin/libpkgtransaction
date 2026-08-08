@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 #pragma once
 
-#include "fixture.h"
+#include "source_state.h"
 
 #include <libpkgtransaction/libpkgtransaction.h>
 
@@ -36,13 +36,5 @@ inline pkgresolve::resolution_result resolution(
       std::move(catalog), std::move(state), std::move(goals), preference));
 }
 
-inline std::size_t count_action(
-    const pkgtransaction::transaction_program& program,
-    pkgtransaction::transaction_action_kind action)
-{
-  return static_cast<std::size_t>(std::count_if(
-      program.nodes().begin(), program.nodes().end(),
-      [action](const auto& node) { return node.action() == action; }));
-}
 
 } // namespace fixture

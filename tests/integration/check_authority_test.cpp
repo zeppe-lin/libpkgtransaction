@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Alexandr Savca
 // SPDX-License-Identifier: GPL-3.0-or-later
-#include "fixture_transaction.h"
-#include "test.h"
+#include "../fixtures/transaction.h"
+#include "../support/test.h"
+#include "../support/program_query.h"
 
 #include <algorithm>
 #include <string>
@@ -58,9 +59,9 @@ int main()
       {fixture::package_goal(pkgsource::requirement_scope::check(),
                              "checked")});
   const auto program = compose(transaction_request::seal(result));
-  TEST_CHECK(fixture::count_action(program, transaction_action_kind::build) == 2);
-  TEST_CHECK(fixture::count_action(program, transaction_action_kind::check) == 1);
-  TEST_CHECK(fixture::count_action(program, transaction_action_kind::install) == 0);
+  TEST_CHECK(test_support::count_action(program, transaction_action_kind::build) == 2);
+  TEST_CHECK(test_support::count_action(program, transaction_action_kind::check) == 1);
+  TEST_CHECK(test_support::count_action(program, transaction_action_kind::install) == 0);
 
   const auto& check = check_node(program);
   TEST_CHECK(check.selection());
