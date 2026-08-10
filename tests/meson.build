@@ -58,6 +58,8 @@ if get_option('tests').allowed()
     test('public-header-' + header, header_test, suite: 'header')
   endforeach
 
+  sh = find_program('sh')
+
   pkgconfig_metadata = find_program('contracts/check_pkgconfig_metadata.sh')
   test(
     'pkgconfig-metadata',
@@ -66,27 +68,49 @@ if get_option('tests').allowed()
     suite: 'contract',
   )
 
-  release_metadata = find_program('contracts/check_release_metadata.sh')
-  test(
-    'release-metadata',
-    release_metadata,
-    args: [meson.project_source_root()],
-    suite: 'contract',
+  abi_layout = executable(
+    'abi-layout-test',
+    'contracts/abi_layout_test.cpp',
+    dependencies: libpkgtransaction_dep,
+    install: false,
   )
+  test('abi-layout', abi_layout, suite: 'contract')
 
-  authority_contract = find_program('contracts/check_authority_contract.sh')
-  test(
-    'authority-contract',
-    authority_contract,
-    args: [meson.project_source_root()],
-    suite: 'contract',
-  )
+  if library_kind == 'shared'
+    nm = find_program('nm')
+    test(
+      'abi-surface',
+      sh,
+      args: [
+        meson.current_source_dir() / 'contracts/check_abi_surface.sh',
+        nm.full_path(),
+        libpkgtransaction.full_path(),
+        meson.project_source_root() / 'abi/libpkgtransaction.exports',
+      ],
+      suite: 'contract',
+    )
+    dependency_abi = find_program('contracts/check_dependency_abi.sh')
+    test(
+      'dependency-abi',
+      dependency_abi,
+      args: [libpkgtransaction.full_path()],
+      suite: 'contract',
+    )
+  endif
 
-  test_layout = find_program('contracts/check_test_layout.sh')
-  test(
-    'test-layout',
-    test_layout,
-    args: [meson.project_source_root()],
-    suite: 'contract',
-  )
+  contract_tests = {
+    'release-metadata': 'contracts/check_release_metadata.sh',
+    'authority-contract': 'contracts/check_authority_contract.sh',
+    'test-layout': 'contracts/check_test_layout.sh',
+    'abi-contract': 'contracts/check_abi_contract.sh',
+    'ci-contract': 'contracts/check_ci_contract.sh',
+  }
+  foreach name, program : contract_tests
+    test(
+      name,
+      sh,
+      args: [meson.current_source_dir() / program, meson.project_source_root()],
+      suite: 'contract',
+    )
+  endforeach
 endif

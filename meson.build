@@ -3,7 +3,7 @@
 project(
   'libpkgtransaction',
   'cpp',
-  version: '2.1.0',
+  version: '3.0.0',
   license: 'GPL-3.0-or-later',
   meson_version: '>=1.2.0',
   default_options: [
@@ -26,35 +26,29 @@ endif
 libcrypto_dep = dependency('libcrypto', required: true, static: want_static)
 libpkgsource_dep = dependency(
   'libpkgsource',
-  version: '>=2.0.0',
+  version: ['>=3.0.1', '<4.0.0'],
   required: true,
   static: want_static,
   fallback: ['libpkgsource', 'libpkgsource_dep'],
   default_options: [
     'default_library=' + library_kind,
     'link_mode=' + get_option('link_mode'),
-    'planner_adapter=disabled',
-    'yaml_adapter=disabled',
   ],
 )
 libpkgstate_dep = dependency(
   'libpkgstate',
-  version: '>=2.1.0',
+  version: ['>=3.1.0', '<4.0.0'],
   required: true,
   static: want_static,
   fallback: ['libpkgstate', 'libpkgstate_dep'],
   default_options: [
     'default_library=' + library_kind,
     'link_mode=' + get_option('link_mode'),
-    'source_adapter=disabled',
-    'build_adapter=disabled',
-    'planner_adapter=disabled',
-    'application_adapter=disabled',
   ],
 )
 libpkgresolve_dep = dependency(
   'libpkgresolve',
-  version: '>=2.0.0',
+  version: ['>=3.0.0', '<4.0.0'],
   required: true,
   static: want_static,
   fallback: ['libpkgresolve', 'libpkgresolve_dep'],

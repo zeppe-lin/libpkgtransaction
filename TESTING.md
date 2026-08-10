@@ -82,9 +82,20 @@ meson test -C build --suite header --print-errorlogs
 meson test -C build --suite contract --print-errorlogs
 ```
 
-Release qualification still requires separate shared/static build directories
-and the project sanitizer matrix. A passing unit or source-contract subset is
-not release proof for the resolver-to-transaction composition seam.
+Release qualification requires separate GCC/Clang shared and static build directories,
+GCC and Clang ASan+UBSan builds, and execution of the installed pkg-config
+consumer. Shared qualification additionally proves the exact 78-symbol ABI
+surface and direct `libpkgsource.so.3`, `libpkgcatalog.so.3`,
+`libpkgresolve.so.3`, and `libpkgstate.so.4` edges. The x86-64 ABI-layout
+contract pins both the foreign by-value values and transaction carriers that
+retain them. A passing unit or source-contract subset is not release proof for
+the resolver/state-to-transaction composition seam.
+
+The hosted qualification driver builds the dependency closure into an isolated
+prefix before configuring this repository. It does not reuse a host-installed
+resolver or state library. The installed consumer then resolves one real catalog
+candidate, seals a transaction request, composes a program, and catches a public
+`pkgtransaction::error` across the installed DSO boundary.
 
 The categorized sources are intentionally pinned by
 `tests/contracts/check_test_layout.sh`; new test code should enter the role that

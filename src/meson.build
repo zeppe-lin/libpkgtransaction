@@ -3,6 +3,18 @@
 public_inc = include_directories('../include')
 private_inc = include_directories('.')
 
+elf_export_generator = find_program(
+  meson.project_source_root() / 'tools/generate-elf-export-script.sh',
+)
+elf_export_script_name = 'libpkgtransaction.exports.map'
+elf_export_script_path = meson.current_build_dir() / elf_export_script_name
+elf_export_script = configure_file(
+  input: '../abi/libpkgtransaction.exports',
+  output: elf_export_script_name,
+  command: [elf_export_generator, '@INPUT@'],
+  capture: true,
+)
+
 libpkgtransaction = library(
   'pkgtransaction',
   [
@@ -21,20 +33,27 @@ libpkgtransaction = library(
     libpkgresolve_dep,
     libpkgstate_dep,
   ],
+  link_args: ['-Wl,--version-script=' + elf_export_script_path],
+  link_depends: [elf_export_script],
   install: true,
   version: meson.project_version(),
-  soversion: '2',
+  soversion: '3',
 )
+
+libpkgtransaction_consumer_deps = [
+  libpkgsource_dep,
+  libpkgresolve_dep,
+  libpkgstate_dep,
+]
+if want_static
+  libpkgtransaction_consumer_deps += [libcrypto_dep]
+endif
 
 libpkgtransaction_dep = declare_dependency(
   link_with: libpkgtransaction,
   include_directories: public_inc,
-  dependencies: [
-    libcrypto_dep,
-    libpkgsource_dep,
-    libpkgresolve_dep,
-    libpkgstate_dep,
-  ],
+  dependencies: libpkgtransaction_consumer_deps,
+  version: meson.project_version(),
 )
 meson.override_dependency('libpkgtransaction', libpkgtransaction_dep)
 
@@ -56,9 +75,9 @@ pkgconf.generate(
   description: 'Native deterministic package-transaction authority',
   subdirs: '.',
   requires: [
-    'libpkgsource >= 2.0.0',
-    'libpkgresolve >= 2.0.0',
-    'libpkgstate >= 2.1.0',
+    libpkgsource_dep,
+    libpkgresolve_dep,
+    libpkgstate_dep,
   ],
-  requires_private: ['libcrypto'],
+  requires_private: [libcrypto_dep],
 )

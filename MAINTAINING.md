@@ -10,10 +10,12 @@ Before release:
 3. run ASan and UBSan builds;
 4. compile every public header standalone;
 5. inspect SONAME and dynamic dependency isolation;
-6. verify the direct `libpkgsource >= 2.0.0` metadata floor;
-7. verify build/check requirement edges target construction authority;
-8. verify documentation and release metadata;
-9. replay the exact release mbox from its declared base.
+6. verify exact source 3 / resolver 3 / state 4 provider generations and bounded pkg-config intervals;
+7. verify the reviewed ELF ABI surface and x86-64 by-value layout contract;
+8. build and execute installed shared and static pkg-config consumers;
+9. verify build/check requirement edges target construction authority;
+10. verify documentation, CI, and release metadata;
+11. replay the exact release mbox from its declared base.
 
 Do not reinterpret an existing identity domain. Introduce a new domain/version
 when semantic material changes.

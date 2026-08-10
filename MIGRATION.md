@@ -33,3 +33,14 @@ reuse persisted transaction-program identities for check goals: check-scoped
 requirements now precede the issuer build node, so affected edge and program
 identities change. This closes the ordering required by the existing build and
 check authority contracts; it does not add check execution.
+
+
+## 3.0.0
+
+Install the current native authority generations (`libpkgsource.so.3`,
+`libpkgcatalog.so.3`, `libpkgresolve.so.3`, and `libpkgstate.so.4`) and rebuild
+all transaction consumers against `libpkgtransaction.so.3`. The transaction 2
+ABI cannot be widened to these providers: `transaction_authority` and
+`transaction_node` retain resolver/state values by value and their layouts
+changed. No compatibility shim or cross-generation carrier is provided. The
+transaction identity domains and graph semantics are unchanged.

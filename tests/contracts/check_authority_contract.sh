@@ -15,12 +15,19 @@ if grep -R -E 'Pkgfile|fakeroot|pkgman\.conf|/var/lib/pkg/db|build_and_run' \
   exit 1
 fi
 
+if grep -E \
+    '(planner_adapter|yaml_adapter|source_adapter|build_adapter|application_adapter)=' \
+    "$root/meson.build" >/dev/null; then
+  echo 'authority-contract: retired embedded adapter option entered current dependency fallback' >&2
+  exit 1
+fi
+
 grep -q "'libpkgresolve'" "$root/meson.build"
-grep -q "version: '>=2.0.0'" "$root/meson.build"
+grep -q "version: \['>=3.0.0', '<4.0.0'\]" "$root/meson.build"
 grep -q "'libpkgsource'" "$root/meson.build"
-grep -q "version: '>=2.0.0'" "$root/meson.build"
+grep -q "version: \['>=3.0.1', '<4.0.0'\]" "$root/meson.build"
 grep -q "'libpkgstate'" "$root/meson.build"
-grep -q "version: '>=2.1.0'" "$root/meson.build"
+grep -q "version: \['>=3.1.0', '<4.0.0'\]" "$root/meson.build"
 
 grep -q 'target_upgrade_node' "$root/src/composer.cpp"
 grep -q 'remove or upgrade action' "$root/src/composer.cpp"

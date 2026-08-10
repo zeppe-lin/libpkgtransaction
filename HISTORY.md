@@ -1,5 +1,24 @@
 # History
 
+## libpkgtransaction 3.0.0
+
+Current authority ABI rebuild and release-product qualification.
+
+- advances `libpkgtransaction` to SONAME 3 because public transaction values
+  retain `libpkgresolve` selections and `libpkgstate` installed authority by
+  value, and both foreign ABI generations changed after transaction 2.x;
+- requires `libpkgsource >= 3.0.1, < 4.0.0`,
+  `libpkgresolve >= 3.0.0, < 4.0.0`, and
+  `libpkgstate >= 3.1.0, < 4.0.0`;
+- preserves transaction composition semantics and all transaction identity
+  domains while rebuilding their C++ carrier ABI against the current native
+  authority closure;
+- anchors the public transaction error hierarchy in the shared object;
+- freezes one reviewed 78-symbol ELF surface and the current x86-64 by-value
+  layout boundary;
+- qualifies exact provider SONAMEs, generated pkg-config metadata, installed
+  shared/static consumption, GCC/Clang builds, and ASan/UBSan builds.
+
 ## libpkgtransaction 2.1.0
 
 Check-input construction ordering correction.
