@@ -85,7 +85,7 @@ meson test -C build --suite contract --print-errorlogs
 Release qualification requires separate GCC/Clang shared and static build directories,
 GCC and Clang ASan+UBSan builds, and execution of the installed pkg-config
 consumer. Shared qualification additionally proves the exact 78-symbol ABI
-surface and direct `libpkgsource.so.3`, `libpkgcatalog.so.3`,
+surface and direct `libpkgsource.so.4`, `libpkgcatalog.so.3`,
 `libpkgresolve.so.3`, and `libpkgstate.so.4` edges. The x86-64 ABI-layout
 contract pins both the foreign by-value values and transaction carriers that
 retain them. A passing unit or source-contract subset is not release proof for
