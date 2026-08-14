@@ -23,7 +23,7 @@ if grep -E \
 fi
 
 grep -q "'libpkgresolve'" "$root/meson.build"
-grep -q "version: \['>=3.0.0', '<4.0.0'\]" "$root/meson.build"
+grep -q "version: \['>=4.0.0', '<5.0.0'\]" "$root/meson.build"
 grep -q "'libpkgsource'" "$root/meson.build"
 grep -q "version: \['>=4.0.0', '<5.0.0'\]" "$root/meson.build"
 grep -q "'libpkgstate'" "$root/meson.build"

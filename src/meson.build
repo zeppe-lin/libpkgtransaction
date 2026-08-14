@@ -37,7 +37,7 @@ libpkgtransaction = library(
   link_depends: [elf_export_script],
   install: true,
   version: meson.project_version(),
-  soversion: '3',
+  soversion: '4',
 )
 
 libpkgtransaction_consumer_deps = [

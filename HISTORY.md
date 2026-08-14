@@ -1,5 +1,19 @@
 # History
 
+## libpkgtransaction 4.0.0
+
+Resolver-4/catalog-4 carrier ABI rebuild.
+
+- Advance `libpkgtransaction` to SONAME 4 because public transaction nodes
+  retain `pkgresolve::selected_package` by value.
+- Require `libpkgsource >= 4.0.0, < 5.0.0`,
+  `libpkgresolve >= 4.0.0, < 5.0.0`, and the existing
+  `libpkgstate >= 3.1.0, < 4.0.0` authority.
+- Preserve transaction composition semantics and identity domains while
+  refusing resolver-3/catalog-3 carrier generations.
+- Keep the reviewed 78-symbol surface and advance only the truthful carrier and
+  provider ABI generation.
+
 ## libpkgtransaction 3.0.0
 
 Current authority ABI rebuild and release-product qualification.

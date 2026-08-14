@@ -37,10 +37,19 @@ check authority contracts; it does not add check execution.
 
 ## 3.0.0
 
-Install the current native authority generations (`libpkgsource.so.3`,
+For this release, install `libpkgsource.so.3`,
 `libpkgcatalog.so.3`, `libpkgresolve.so.3`, and `libpkgstate.so.4`) and rebuild
 all transaction consumers against `libpkgtransaction.so.3`. The transaction 2
 ABI cannot be widened to these providers: `transaction_authority` and
 `transaction_node` retain resolver/state values by value and their layouts
 changed. No compatibility shim or cross-generation carrier is provided. The
 transaction identity domains and graph semantics are unchanged.
+
+## 4.0.0
+
+Install `libpkgsource.so.4`, `libpkgcatalog.so.4`, and `libpkgresolve.so.4`, then
+rebuild transaction consumers against `libpkgtransaction.so.4`. The resolver-4
+carrier embeds the source-realization/catalog-4 authority transition, and
+`transaction_node` retains resolver selections by value. No source-3,
+catalog-3, or resolver-3 carrier is translated into the new transaction ABI.
+Transaction identity domains and graph semantics are unchanged.

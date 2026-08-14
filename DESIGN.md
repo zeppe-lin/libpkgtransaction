@@ -135,3 +135,14 @@ Version 1 has no:
 compatible with SONAME 1 even though the check-program accessor adds no field
 of its own. Version 2 forbids a mixed source/catalog/resolve authority closure
 and preserves transaction identities and graph semantics.
+
+## Version 4 ABI boundary
+
+`transaction_node` retains `pkgresolve::selected_package` by value. Resolver 4
+retains catalog-4/source-4 authority, so the resolver carrier transition is a
+transaction carrier transition even when the visible transaction graph and
+identity domains do not change.
+
+Version 4 advances the transaction SONAME to `libpkgtransaction.so.4`, requires
+`libpkgresolve >= 4.0.0, < 5.0.0`, and rejects resolver-3/catalog-3 carriers.
+No compatibility reconstruction is performed.

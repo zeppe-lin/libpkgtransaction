@@ -28,5 +28,5 @@ for identity in transaction_request_identity transaction_node_identity transacti
 done
 grep -F 'pkgtransaction::compose(pkgtransaction::transaction_request)' "$demangled" >/dev/null || fail 'compose is absent from reviewed ABI'
 grep -F 'typeinfo for pkgtransaction::error' "$demangled" >/dev/null || fail 'public error RTTI is absent from reviewed ABI'
-grep -F "soversion: '3'" "$root/src/meson.build" >/dev/null || fail 'SONAME generation is not 3'
+grep -F "soversion: '4'" "$root/src/meson.build" >/dev/null || fail 'SONAME generation is not 4'
 grep -F -- '--version-script=' "$root/src/meson.build" >/dev/null || fail 'reviewed ELF export manifest is not linked'
