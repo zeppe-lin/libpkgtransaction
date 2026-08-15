@@ -37,7 +37,9 @@ grep -q 'requirement_scope_kind::check' "$root/src/composer.cpp"
 grep -q 'old_pre' "$root/tests/integration/lifecycle_test.cpp"
 grep -q 'new_post' "$root/tests/integration/lifecycle_test.cpp"
 grep -q 'missing_check_program' "$root/tests/integration/check_authority_test.cpp"
-grep -q 'edge.after() == app_check->identity()' \
+grep -q 'program, \*tester_build, \*app_check' \
   "$root/tests/integration/ordering_test.cpp"
-grep -q 'Build- and check-scoped package requirements both precede' \
+grep -q 'Build-scoped package requirements precede' \
+  "$root/DESIGN.md"
+grep -q 'Check-scoped package requirements precede' \
   "$root/DESIGN.md"

@@ -10,6 +10,15 @@ A future compatibility frontend may translate an explicitly captured legacy
 intent into a native resolution request and convergence policy. Compatibility
 logic must remain outside this library.
 
+## Unreleased
+
+No API or ABI migration is required. Rebuild transaction consumers and do not
+reuse persisted transaction-program identities for check goals produced by the
+4.0.0 ordering semantics. Check-scoped requirements now target the exact check
+node rather than issuer construction, so affected edge and program identities
+change. Build requests may still retain logical check-input authority; callers
+realize those inputs independently for the check phase.
+
 ## 1.1.0
 
 No API, ABI, or stored-format migration is required. Rebuild consumers against

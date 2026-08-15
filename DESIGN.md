@@ -65,12 +65,14 @@ action for that package.
 ## Ordering
 
 Requirement edges retain the exact resolver requirement-edge identity and
-scope. Build- and check-scoped package requirements both precede the issuer's
-build node. This is an authority rule, not an execution convenience: the sealed
-`libpkgbuild::build_request` retains both input classes, and the later check
-request projects its exact check-input set from the successful build result. A
-check node therefore inherits those inputs through its own build-before-check
-phase edge rather than receiving a second direct requirement edge.
+scope. Build-scoped package requirements precede the issuer's build node.
+Check-scoped package requirements precede the issuer's check node. The checked
+package's own build independently precedes that check through a phase edge.
+
+The sealed `libpkgbuild::build_request` may retain logical check-input authority,
+but that authority is not a construction prerequisite. The later check request
+projects its exact check-input set from the successful build result, while the
+transaction graph orders those input completions directly before check.
 
 Phase edges distinguish:
 
@@ -94,9 +96,9 @@ Runtime requirement cycles are collapsed into explicit `runtime_cohort` values.
 Internal runtime witnesses remain retained by the cohort and are not emitted as
 cyclic ordering edges.
 
-Build/check cycles among catalog authorities are refused. An installed
-selection breaks construction because no construction node is required for that
-selection. Lifecycle-requirement cycles are refused.
+Build requirement cycles among catalog construction authorities are refused.
+An installed selection breaks construction because no construction node is
+required for that selection. Lifecycle-requirement cycles are refused.
 
 ## Identity domains
 

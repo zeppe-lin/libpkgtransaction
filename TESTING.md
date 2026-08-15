@@ -45,8 +45,9 @@ The native suite proves:
   while either release drift or source-snapshot drift requires upgrade;
 - build-scoped requirements precede construction, including installed
   build-environment retention;
-- check-scoped requirements precede the build whose result later supplies the
-  check input, with no redundant direct requirement edge into the check node;
+- check-scoped requirements precede the exact check node without becoming
+  construction prerequisites; the checked package's own build independently
+  precedes check through phase ordering;
 - runtime requirements retain their exact witnesses and point from the required
   completion node to the issuer completion node;
 - lifecycle-scoped requirements precede the exact lifecycle node while

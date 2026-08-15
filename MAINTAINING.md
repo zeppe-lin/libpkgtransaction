@@ -13,7 +13,8 @@ Before release:
 6. verify exact source 4 / resolver 4 / state 4 provider generations and bounded pkg-config intervals;
 7. verify the reviewed ELF ABI surface and x86-64 by-value layout contract;
 8. build and execute installed shared and static pkg-config consumers;
-9. verify build/check requirement edges target construction authority;
+9. verify build requirements target build nodes and check requirements target
+   check nodes;
 10. verify documentation, CI, and release metadata;
 11. replay the exact release mbox from its declared base.
 

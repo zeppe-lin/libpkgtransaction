@@ -14,6 +14,8 @@ int main()
   auto app = fixture::source(profiles, "app", {
       fixture::requirement(pkgsource::requirement_scope::run(),
                            "runtime", "requirements.run[0]"),
+      fixture::requirement(pkgsource::requirement_scope::build(),
+                           "tester", "requirements.build[0]"),
       fixture::requirement(pkgsource::requirement_scope::check(),
                            "tester", "requirements.check[0]"),
   }, {"x86_64"}, {"x86_64"}, "1.0.0", 1, {}, "printf 'checked\\n'\n");
@@ -50,6 +52,9 @@ int main()
 
   TEST_CHECK(test_support::has_requirement(
       program, *tester_build, *app_build,
+      pkgsource::requirement_scope_kind::build));
+  TEST_CHECK(test_support::has_requirement(
+      program, *tester_build, *app_check,
       pkgsource::requirement_scope_kind::check));
   TEST_CHECK(test_support::has_requirement(
       program, *runtime_install, *app_install,
@@ -58,7 +63,7 @@ int main()
   TEST_CHECK(std::none_of(
       program.edges().begin(), program.edges().end(), [&](const auto& edge) {
         return edge.kind() == transaction_edge_kind::requirement &&
-               edge.after() == app_check->identity() && edge.scope() &&
+               edge.after() == app_build->identity() && edge.scope() &&
                edge.scope()->kind() == pkgsource::requirement_scope_kind::check;
       }));
   return 0;

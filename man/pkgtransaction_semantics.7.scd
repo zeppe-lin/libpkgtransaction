@@ -20,11 +20,12 @@ additive resolution result never implies removal.
 
 # ORDERING
 
-Requirement edges preserve typed resolver scopes. Build- and check-scoped
-package requirements both precede the issuer build node because the sealed
-build result retains both input classes. The check node inherits exact check
-inputs through the build-before-check phase edge; no redundant requirement edge
-is emitted directly to the check node.
+Requirement edges preserve typed resolver scopes. Build-scoped package
+requirements precede the issuer build node. Check-scoped package requirements
+precede the issuer check node. The checked package's own build independently
+precedes check through the build-before-check phase edge. Logical check-input
+authority retained by the sealed build result does not make those inputs
+construction prerequisites.
 
 Phase edges order build, check, package action, and explicitly requested
 lifecycle nodes. A lifecycle node without its matching install, upgrade, or
@@ -40,7 +41,7 @@ Storage order is deterministic but is not execution precedence.
 
 # CYCLES
 
-Runtime cycles become explicit cohorts. Build/check cycles among catalog
+Runtime cycles become explicit cohorts. Build requirement cycles among catalog
 construction authorities and lifecycle-requirement cycles are refused.
 
 # AUTHORITY

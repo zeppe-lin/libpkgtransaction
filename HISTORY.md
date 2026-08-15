@@ -1,5 +1,19 @@
 # History
 
+## Unreleased
+
+Check-input phase-order correction after execution-resource separation.
+
+- orders build-scoped package requirements before issuer construction and
+  check-scoped package requirements before the issuer check node;
+- keeps the checked package's own build-before-check phase edge as an
+  independent prerequisite;
+- excludes check-scoped edges from construction-cycle detection because check
+  inputs are no longer concrete construction resources;
+- preserves the public API, SONAME 4, value layouts, and identity domains while
+  changing affected transaction-program identities to reflect the corrected
+  graph.
+
 ## libpkgtransaction 4.0.0
 
 Resolver-4/catalog-4 carrier ABI rebuild.

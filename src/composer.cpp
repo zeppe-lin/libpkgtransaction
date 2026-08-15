@@ -507,6 +507,8 @@ transaction_program compose(transaction_request request)
       lifecycle_graph.try_emplace(edge.required().hex());
       continue;
     }
+    if (edge.scope().kind() != pkgsource::requirement_scope_kind::build)
+      continue;
     const auto issuer = state.selections.find(edge.issuer().hex());
     const auto required = state.selections.find(edge.required().hex());
     if (issuer != state.selections.end() && required != state.selections.end() &&
@@ -521,7 +523,7 @@ transaction_program compose(transaction_request request)
   for (const auto& component : strongly_connected(construction_graph))
     if (cyclic_component(component, construction_graph))
       throw error(error_code::construction_cycle,
-                  "build/check requirement cycle cannot be ordered");
+                  "build requirement cycle cannot be ordered");
   for (const auto& component : strongly_connected(lifecycle_graph))
     if (cyclic_component(component, lifecycle_graph))
       throw error(error_code::lifecycle_cycle,
@@ -584,9 +586,10 @@ transaction_program compose(transaction_request request)
     }
     const auto before = completion_node(state, witness.required());
     std::optional<node_id> after;
-    if (witness.scope().kind() == pkgsource::requirement_scope_kind::build ||
-        witness.scope().kind() == pkgsource::requirement_scope_kind::check)
+    if (witness.scope().kind() == pkgsource::requirement_scope_kind::build)
       after = lookup(state, witness.issuer(), transaction_action_kind::build);
+    else if (witness.scope().kind() == pkgsource::requirement_scope_kind::check)
+      after = lookup(state, witness.issuer(), transaction_action_kind::check);
     else if (witness.scope().kind() == pkgsource::requirement_scope_kind::lifecycle)
       after = lookup(state, witness.issuer(), transaction_action_kind::lifecycle,
                      witness.scope().action());

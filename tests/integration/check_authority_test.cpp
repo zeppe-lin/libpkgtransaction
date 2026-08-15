@@ -91,14 +91,14 @@ int main()
       program.edges().begin(), program.edges().end(), [&](const auto& edge) {
         return edge.kind() == transaction_edge_kind::requirement &&
                edge.before() == tester_build.identity() &&
-               edge.after() == checked_build.identity() && edge.scope() &&
+               edge.after() == check.identity() && edge.scope() &&
                edge.scope()->kind() ==
                    pkgsource::requirement_scope_kind::check;
       }));
   TEST_CHECK(std::none_of(
       program.edges().begin(), program.edges().end(), [&](const auto& edge) {
         return edge.kind() == transaction_edge_kind::requirement &&
-               edge.after() == check.identity() && edge.scope() &&
+               edge.after() == checked_build.identity() && edge.scope() &&
                edge.scope()->kind() ==
                    pkgsource::requirement_scope_kind::check;
       }));
