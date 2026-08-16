@@ -101,3 +101,8 @@ candidate, seals a transaction request, composes a program, and catches a public
 The categorized sources are intentionally pinned by
 `tests/contracts/check_test_layout.sh`; new test code should enter the role that
 matches the evidence it proves rather than accumulate again in `tests/` root.
+
+The `integration/runtime_cohort_ordering_test.cpp` assault combines a reciprocal
+runtime cohort with independent construction predecessors and shared build/check
+inputs, proving runtime SCC representation never becomes cyclic execution
+precedence.
