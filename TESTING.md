@@ -105,4 +105,9 @@ matches the evidence it proves rather than accumulate again in `tests/` root.
 The `integration/runtime_cohort_ordering_test.cpp` assault combines a reciprocal
 runtime cohort with independent construction predecessors and shared build/check
 inputs, proving runtime SCC representation never becomes cyclic execution
-precedence.
+precedence. `integration/runtime_cohort_boundary_ordering_test.cpp` then attacks
+the condensation boundary directly: one prerequisite of a single SCC member
+must gate every cohort completion, one consumer of a single member must wait for
+every cohort completion, both lifted edge sets must retain the exact originating
+resolver witness, and the reciprocal internal witnesses must remain free of
+fabricated member-to-member order.

@@ -29,6 +29,7 @@ for path in \
   integration/lifecycle_test.cpp \
   integration/construction_ordering_test.cpp \
   integration/runtime_cohort_ordering_test.cpp \
+  integration/runtime_cohort_boundary_ordering_test.cpp \
   integration/lifecycle_ordering_test.cpp \
   integration/adversarial_result_test.cpp \
   contracts/abi_layout_test.cpp \

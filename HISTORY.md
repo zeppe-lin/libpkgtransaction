@@ -13,6 +13,12 @@ Check-input phase-order correction after execution-resource separation.
 - preserves the public API, SONAME 4, value layouts, and identity domains while
   changing affected transaction-program identities to reflect the corrected
   graph.
+- projects runtime requirements crossing an SCC boundary onto the complete
+  cohort condensation boundary, so prerequisites of one member gate the whole
+  cohort and consumers of one member wait for the whole cohort;
+- retains the exact originating resolver witness on every projected boundary
+  edge while keeping reciprocal internal runtime witnesses cohort-only, without
+  fabricated member precedence.
 
 ## libpkgtransaction 4.0.0
 

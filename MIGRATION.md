@@ -13,11 +13,13 @@ logic must remain outside this library.
 ## Unreleased
 
 No API or ABI migration is required. Rebuild transaction consumers and do not
-reuse persisted transaction-program identities for check goals produced by the
-4.0.0 ordering semantics. Check-scoped requirements now target the exact check
-node rather than issuer construction, so affected edge and program identities
-change. Build requests may still retain logical check-input authority; callers
-realize those inputs independently for the check phase.
+reuse persisted transaction-program identities produced by the previous graph
+semantics. Check-scoped requirements now target the exact check node rather than
+issuer construction. Runtime requirements crossing a cyclic runtime component
+are projected over the complete cohort condensation boundary. Both corrections
+change affected edge and program identities without changing identity domains.
+Build requests may still retain logical check-input authority; callers realize
+those inputs independently for the check phase.
 
 ## 1.1.0
 

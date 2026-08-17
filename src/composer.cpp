@@ -577,13 +577,33 @@ transaction_program compose(transaction_request request)
         before, after, order, identity));
   };
 
+  const auto runtime_boundary = [&](const selection_id& selection) {
+    std::vector<node_id> boundary;
+    const auto component = runtime_component.find(selection.hex());
+    if (component != runtime_component.end()) {
+      boundary = cohorts.at(component->second).members();
+      return boundary;
+    }
+    if (const auto completion = completion_node(state, selection))
+      boundary.push_back(*completion);
+    return boundary;
+  };
+
   for (const auto& witness : result.edges()) {
     if (witness.scope().kind() == pkgsource::requirement_scope_kind::run) {
       const auto left = runtime_component.find(witness.issuer().hex());
       const auto right = runtime_component.find(witness.required().hex());
       if (left != runtime_component.end() && right != runtime_component.end() &&
           left->second == right->second) continue;
+
+      const auto before = runtime_boundary(witness.required());
+      const auto after = runtime_boundary(witness.issuer());
+      for (const auto& predecessor : before)
+        for (const auto& successor : after)
+          add_requirement(predecessor, successor, witness);
+      continue;
     }
+
     const auto before = completion_node(state, witness.required());
     std::optional<node_id> after;
     if (witness.scope().kind() == pkgsource::requirement_scope_kind::build)
@@ -593,8 +613,6 @@ transaction_program compose(transaction_request request)
     else if (witness.scope().kind() == pkgsource::requirement_scope_kind::lifecycle)
       after = lookup(state, witness.issuer(), transaction_action_kind::lifecycle,
                      witness.scope().action());
-    else
-      after = completion_node(state, witness.issuer());
     if (before && after) add_requirement(*before, *after, witness);
   }
 

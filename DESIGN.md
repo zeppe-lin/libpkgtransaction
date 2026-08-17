@@ -94,7 +94,12 @@ precedence.
 
 Runtime requirement cycles are collapsed into explicit `runtime_cohort` values.
 Internal runtime witnesses remain retained by the cohort and are not emitted as
-cyclic ordering edges.
+cyclic ordering edges. A runtime requirement crossing a cohort boundary is
+projected onto the complete condensation boundary: an external prerequisite of
+one cohort member precedes every completion member, and an external consumer of
+one cohort member follows every completion member. Each projected ordering edge
+retains the exact resolver requirement witness that crosses the boundary; no
+member-to-member precedence is fabricated inside the cohort.
 
 Build requirement cycles among catalog construction authorities are refused.
 An installed selection breaks construction because no construction node is

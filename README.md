@@ -9,8 +9,9 @@ lifecycle work; admits check work only when the exact selected source snapshot
 carries a check program; binds installed removal lifecycle and incoming
 installation lifecycle around one exact upgrade action; orders build input
 authority before construction and check input authority before check; retains
-typed ordering witnesses; represents runtime cycles as explicit cohorts; and
-seals the complete graph under a domain-separated identity.
+typed ordering witnesses; represents runtime cycles as explicit cohorts; projects
+requirements crossing a runtime cohort onto its complete condensation boundary;
+and seals the complete graph under a domain-separated identity.
 
 The library does not discover collections, resolve dependencies, inspect
 archives, construct `libpkgplan` requests, execute programs, mutate filesystems,

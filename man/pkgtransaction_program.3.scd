@@ -26,7 +26,11 @@ node kind. A valid transaction program never contains a check node without a
 program.
 
 A runtime cohort retains a strongly connected runtime group and its internal
-requirement witnesses without claiming an order among its members.
+requirement witnesses without claiming an order among its members. A runtime
+requirement crossing a cohort boundary is projected onto the complete cohort
+boundary: a prerequisite of one member precedes every cohort completion member,
+and a consumer of one member follows every cohort completion member. Every
+projected edge retains the exact crossing resolver witness.
 
 # SEE ALSO
 

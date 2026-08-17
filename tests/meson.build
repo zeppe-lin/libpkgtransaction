@@ -24,6 +24,7 @@ if get_option('tests').allowed()
     ['lifecycle-ordering', 'integration/lifecycle_ordering_test.cpp'],
     ['cycle', 'integration/cycle_test.cpp'],
     ['runtime-cohort-ordering', 'integration/runtime_cohort_ordering_test.cpp'],
+    ['runtime-cohort-boundary-ordering', 'integration/runtime_cohort_boundary_ordering_test.cpp'],
     ['check-authority', 'integration/check_authority_test.cpp'],
     ['program-view', 'integration/program_view_test.cpp'],
     ['adversarial-result', 'integration/adversarial_result_test.cpp'],
