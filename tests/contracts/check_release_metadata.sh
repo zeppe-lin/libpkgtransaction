@@ -5,8 +5,9 @@ set -eu
 root=${1:?source root required}
 fail() { echo "release-metadata: $*" >&2; exit 1; }
 version=$(sed -n "s/^[[:space:]]*version: '\([^']*\)'.*/\1/p" "$root/meson.build" | head -n 1)
-[ "$version" = 4.0.0 ] || fail "project version is '$version', expected 4.0.0"
-grep -F '## libpkgtransaction 4.0.0' "$root/HISTORY.md" >/dev/null || fail 'HISTORY omits 3.0.0'
+[ "$version" = 4.1.0 ] || fail "project version is '$version', expected 4.1.0"
+grep -F '## libpkgtransaction 4.1.0' "$root/HISTORY.md" >/dev/null || fail 'HISTORY omits 4.1.0'
+grep -F '## 4.1.0' "$root/MIGRATION.md" >/dev/null || fail 'MIGRATION omits 4.1.0'
 grep -F "soversion: '4'" "$root/src/meson.build" >/dev/null || fail 'shared library is not SONAME 4'
 block() { sed -n "/^[[:space:]]*'$1',[[:space:]]*$/,/^[[:space:]]*)/p" "$root/meson.build"; }
 for spec in 'libpkgsource >=4.0.0 <5.0.0' 'libpkgresolve >=4.0.0 <5.0.0' 'libpkgstate >=3.1.0 <4.0.0'; do

@@ -12,6 +12,8 @@ logic must remain outside this library.
 
 ## Unreleased
 
+## 4.1.0
+
 No API or ABI migration is required. Rebuild transaction consumers and do not
 reuse persisted transaction-program identities produced by the previous graph
 semantics. Check-scoped requirements now target the exact check node rather than

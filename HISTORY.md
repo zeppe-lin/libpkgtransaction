@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## libpkgtransaction 4.1.0
+
+Transaction partial-order corrections after phase and runtime-cohort qualification.
+
 Check-input phase-order correction after execution-resource separation.
 
 - orders build-scoped package requirements before issuer construction and

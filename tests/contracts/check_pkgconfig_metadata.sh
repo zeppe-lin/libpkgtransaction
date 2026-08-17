@@ -12,7 +12,7 @@ fail() {
 if [ ! -s "$metadata" ]; then metadata=$(find "$build_root" -type f -name libpkgtransaction.pc -print | sed -n '1p'); fi
 [ -n "${metadata:-}" ] && [ -s "$metadata" ] || fail 'generated libpkgtransaction.pc was not found'
 [ "$(sed -n 's/^Name:[[:space:]]*//p' "$metadata")" = 'libpkgtransaction' ] || fail 'wrong module name'
-[ "$(sed -n 's/^Version:[[:space:]]*//p' "$metadata")" = '4.0.0' ] || fail 'wrong module version'
+[ "$(sed -n 's/^Version:[[:space:]]*//p' "$metadata")" = '4.1.0' ] || fail 'wrong module version'
 normalize() { sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/[[:space:]][[:space:]]*/ /g' -e 's/ *\([<>]=\|[<>=]\) */ \1 /' -e '/^$/d'; }
 requires=$(sed -n 's/^Requires:[[:space:]]*//p' "$metadata" | tr ',' '\n' | normalize)
 expected='libpkgsource >= 4.0.0
